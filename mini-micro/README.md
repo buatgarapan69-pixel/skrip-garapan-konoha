@@ -6,11 +6,12 @@ Mining USDT gratis — 2%/hari, gift box gratis, tugas, referral.
 - WD pertama BELUM terbukti cair
 - Gratis, tanpa deposit
 
-> **Skrip untuk garapan ini sedang ditahan** — ada 6 konstanta 64-hex di
-> dalamnya yang belum terverifikasi (bisa jadi hash, bisa jadi private key),
-> jadi tidak di-push dulu sampai jelas. Folder ini berisi panduan saja.
+> ID fungsi tugas diverifikasi ulang 6/6 dari bundle terbaru (25 Nov 2026).
+> Verifikasi sebelumnya (25 Nov 19:21) sempat gagal 4/6 karena satu chunk
+> tugas di bundle saat itu masih berupa stub kosong; di bundle terbaru
+> chunk tersebut sudah terisi dan keenam ID terkonfirmasi ada.
 
-## Cara pakai (kalau skrip sudah tersedia lagi)
+## Cara pakai
 
 ```bash
 pip install telethon
