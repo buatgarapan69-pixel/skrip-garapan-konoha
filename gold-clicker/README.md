@@ -50,18 +50,20 @@ https://www.earngcm.fun/faucet, tab log): 206 klaim, 11.923 Bar,
 1,1923 SOL total per 25 Nov 2026. Contoh tx: 40 Bar → 0,004 SOL
 (`61KWtkjfwxTgskU4sve8VtKPbfUHa6HudGHWcBgVfBaefRgjksJ21oS19SGDebw4HkCQoyfZvhpuv8vfHDHsmdzF`).
 
-## Skrip `gcm_umum.py`
+## Skrip `gcm_umum.py` — 1 PERINTAH
 
 Cek status faucet, buat akun guest, dan klaim faucet dari terminal.
 Tidak berisi akun/kunci siapa pun — akunmu dibuat dari nol dan disimpan
 lokal di `gcm_account.json` (jangan disebar).
 
 ```bash
-pip install requests        # atau pakai stdlib saja (urllib)
-python3 gcm_umum.py status  # cek faucet (buka/tutup, pool, total terbayar)
-python3 gcm_umum.py daftar  # buat akun guest baru + lihat saldo
-python3 gcm_umum.py klaim --code WEB... --wallet <alamat SOL kamu> --bars 25
+pip install requests   # atau pakai stdlib saja (urllib)
+python3 gcm_umum.py    # 1 perintah — pilih menu di dalam:
+                       # [1] Cek faucet  [2] Daftar akun  [3] Klaim  [4] Keluar
 ```
+
+Menu klaim minta website code dari game (Settings → Account →
+GET WEBSITE CODE, berlaku 10 menit, sekali pakai) + alamat SOL kamu.
 
 ## Catatan
 

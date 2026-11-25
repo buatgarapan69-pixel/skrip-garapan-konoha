@@ -9,17 +9,22 @@ Reset harian 00:00 UTC. Faucet pool TERBATAS — klaim selagi masih ada.
 Skrip ini TIDAK berisi akun/kunci siapa pun. Semua akun dibuat dari NOL
 (guest) dan disimpan lokal di gcm_account.json — JANGAN disebar ke orang lain.
 
-Cara pakai:
-  python3 gcm_umum.py status            # cek faucet (buka/tutup, pool, total terbayar)
-  python3 gcm_umum.py daftar            # buat akun guest baru + lihat saldo
-  python3 gcm_umum.py klaim --code WEB... --wallet <alamat SOL kamu> --bars 25
-      # klaim faucet. Kode WEB didapat di game: Settings -> Account ->
-      # GET WEBSITE CODE (berlaku 10 menit, sekali pakai).
-      # --bars 25-100, harus <= saldo Bar kamu di game.
+CARA PAKAI — 1 PERINTAH:
+  python3 gcm_umum.py
+Lalu pilih menu di dalam:
+  [1] Cek faucet + saldo akunmu
+  [2] Daftar akun guest baru
+  [3] Klaim faucet
+  [4] Keluar
+
+Klaim minta website code: di game buka Settings -> Account ->
+GET WEBSITE CODE (diawali WEB, berlaku 10 menit, sekali pakai).
+Main gamenya (tutorial + dive) WAJIB manual di HP — drag merge butuh
+sentuhan jari asli, tidak bisa diotomatisasi.
 
 Butuh: python3 + requests (pip install requests) atau stdlib saja (urllib).
 """
-import argparse, json, os, sys, time, uuid
+import json, os, time, uuid
 
 try:
     import requests
@@ -92,7 +97,7 @@ def refresh(acct):
     save_acct(acct)
     return acct["accessToken"]
 
-def cmd_daftar(_args):
+def cmd_daftar():
     s, b = call("POST", "/v1/auth/guest", {})
     if s != 200:
         print("Gagal buat akun:", s, b)
@@ -107,9 +112,9 @@ def cmd_daftar(_args):
     print("playerCode (kode referral kamu):", acct["playerCode"])
     print("Saldo gold (coins):", (me.get("balances") or {}).get("gold"))
     print("Main dulu di https://play.earngcm.fun/ sampai dapat Gold Bar,")
-    print("lalu klaim lewat faucet (lihat: python3 gcm_umum.py klaim --help).")
+    print("lalu klaim lewat menu [3] (butuh website code dari game).")
 
-def cmd_status(_args):
+def cmd_status():
     faucet_status()
     acct = load_acct()
     if acct:
@@ -120,12 +125,12 @@ def cmd_status(_args):
             print("playerCode:", me.get("playerCode"))
             print("Saldo gold (coins):", (me.get("balances") or {}).get("gold"))
 
-def cmd_klaim(args):
+def cmd_klaim(code, wallet, bars):
     acct = load_acct()
     if not acct:
-        print("Belum ada akun lokal. Jalankan dulu: python3 gcm_umum.py daftar")
+        print("Belum ada akun lokal. Pilih dulu menu [2] Daftar.")
         return
-    if not (25 <= args.bars <= 100):
+    if not (25 <= bars <= 100):
         print("Jumlah Bar harus 25-100.")
         return
     at = refresh(acct)
@@ -135,7 +140,7 @@ def cmd_klaim(args):
     print("Akun:", me.get("playerCode"), "| gold (coins):",
           (me.get("balances") or {}).get("gold"))
     # 1. sesi faucet dari website code (berlaku 10 menit, sekali pakai)
-    s, sess = call("POST", "/v1/faucet/sessions", {"code": args.code})
+    s, sess = call("POST", "/v1/faucet/sessions", {"code": code})
     if s != 200:
         print("Sesi faucet gagal (kode salah/kedaluwarsa?):", s, sess)
         return
@@ -151,25 +156,25 @@ def cmd_klaim(args):
     aval = (acc or {}).get("value") or acc
     print("Saldo Bar (faucet):", aval.get("bars"), "| wallet terikat:",
           aval.get("wallet"))
-    if isinstance(aval.get("bars"), (int, float)) and aval["bars"] < args.bars:
-        print("Bar kamu belum cukup untuk klaim", args.bars,
+    if isinstance(aval.get("bars"), (int, float)) and aval["bars"] < bars:
+        print("Bar kamu belum cukup untuk klaim", bars,
               "- main dulu di game (dive + misi harian).")
         return
     # 3. daftarkan wallet SOL (kalau belum terikat)
     if not aval.get("wallet"):
-        s, w = call("POST", "/v1/faucet/wallet", {"wallet": args.wallet},
+        s, w = call("POST", "/v1/faucet/wallet", {"wallet": wallet},
                     extra_headers=hdr)
         print("Daftar wallet:", s, str(w)[:300])
         if s != 200:
             print("Gagal daftar wallet. Cek alamat SOL kamu.")
             return
-    elif aval.get("wallet") != args.wallet:
+    elif aval.get("wallet") != wallet:
         print("Wallet yang terikat di sesi ini:", aval.get("wallet"),
               "- klaim akan dikirim ke alamat itu.")
     # 4. klaim (idempotent: claimId yang sama tidak akan klaim 2x)
     claim_id = str(uuid.uuid4())
     s, c = call("POST", "/v1/faucet/claims",
-                {"claimId": claim_id, "bars": args.bars}, extra_headers=hdr)
+                {"claimId": claim_id, "bars": bars}, extra_headers=hdr)
     print("Klaim:", s, str(c)[:400])
     if s != 200:
         return
@@ -188,17 +193,52 @@ def cmd_klaim(args):
             return
     print("Klaim masih diproses — cek lagi nanti di https://www.earngcm.fun/faucet")
 
-def main():
-    ap = argparse.ArgumentParser(description="GOLD CLICKER / EarnGCM — skrip umum")
-    sub = ap.add_subparsers(dest="cmd", required=True)
-    sub.add_parser("status", help="cek faucet + saldo akunmu")
-    sub.add_parser("daftar", help="buat akun guest baru")
-    k = sub.add_parser("klaim", help="klaim faucet (butuh website code dari game)")
-    k.add_argument("--code", required=True, help="website code, diawali WEB (dari Settings game)")
-    k.add_argument("--wallet", required=True, help="alamat SOL kamu (milikmu sendiri)")
-    k.add_argument("--bars", type=int, default=25, help="jumlah Bar (25-100)")
-    a = ap.parse_args()
-    {"status": cmd_status, "daftar": cmd_daftar, "klaim": cmd_klaim}[a.cmd](a)
+def cmd_klaim_interaktif():
+    code = input("Website code (WEB...): ").strip()
+    if not code:
+        print("Kode kosong — batal.")
+        return
+    if not code.startswith("WEB"):
+        print("Kode biasanya diawali WEB — lanjut aja, tapi cek lagi kalau gagal.")
+    wallet = input("Alamat SOL kamu: ").strip()
+    if not wallet:
+        print("Wallet kosong — batal.")
+        return
+    bars_raw = input("Jumlah Bar [25]: ").strip() or "25"
+    try:
+        bars = int(bars_raw)
+    except ValueError:
+        print("Jumlah Bar harus angka 25-100.")
+        return
+    cmd_klaim(code, wallet, bars)
+
+def menu():
+    print("=" * 40)
+    print("  GOLD CLICKER / EarnGCM")
+    print("  Mining Gold Bar -> SOL (faucet)")
+    print("=" * 40)
+    while True:
+        print()
+        print("[1] Cek faucet + saldo akunmu")
+        print("[2] Daftar akun guest baru")
+        print("[3] Klaim faucet")
+        print("[4] Keluar")
+        try:
+            pilih = input("PILIH MENU >> ").strip()
+        except (EOFError, KeyboardInterrupt):
+            print("\nKeluar.")
+            return
+        if pilih == "1":
+            cmd_status()
+        elif pilih == "2":
+            cmd_daftar()
+        elif pilih == "3":
+            cmd_klaim_interaktif()
+        elif pilih == "4":
+            print("Keluar.")
+            return
+        else:
+            print("Pilihan tidak ada — ketik 1/2/3/4.")
 
 if __name__ == "__main__":
-    main()
+    menu()
