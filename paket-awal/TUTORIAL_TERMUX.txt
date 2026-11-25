@@ -1,0 +1,107 @@
+============================================================
+  TUTORIAL TERMUX — jalanin skrip dari HP Android
+  (buat anggota grup Markas Tim Konoha)
+============================================================
+
+Skrip di paket ini jalan di HP Android pakai Termux
+(terminal Linux di HP). Ikuti langkah di bawah ini.
+
+------------------------------------------------------------
+LANGKAH 1 — DOWNLOAD + INSTALL TERMUX
+------------------------------------------------------------
+Download Termux dari F-Droid (RESMI, versi terbaru):
+  https://f-droid.org/en/packages/com.termux/
+
+Alternatif (kalau F-Droid lambat):
+  https://github.com/termux/termux-app/releases
+
+JANGAN download dari Play Store — versi Play Store sudah
+tidak diupdate / deprecated.
+
+Kalau HP minta "izinkan install dari sumber tidak dikenal",
+izinkan dulu, lalu install APK-nya.
+
+------------------------------------------------------------
+LANGKAH 2 — UPDATE + INSTALL PYTHON
+------------------------------------------------------------
+Buka aplikasi Termux, ketik perintah ini satu per satu
+(tekan Enter tiap baris, tunggu sampai selesai):
+
+  pkg update && pkg upgrade
+
+  pkg install python git
+
+Kalau ditanya "Do you want to continue? [Y/n]", ketik Y
+lalu Enter.
+
+------------------------------------------------------------
+LANGKAH 3 — DOWNLOAD SKRIP DARI GRUP
+------------------------------------------------------------
+Di Telegram, buka file ZIP yang dibagikan di grup Markas,
+download, lalu extract — file .py akan tersimpan di folder
+Download HP kamu.
+
+Di Termux, jalankan dulu (sekali saja, buat buka akses
+ke penyimpanan HP):
+
+  termux-setup-storage
+
+Lalu salin file skrip ke home Termux:
+
+  cp ~/storage/downloads/*.py ~/
+
+Atau pindah ke folder Download dan jalanin dari sana:
+
+  cd ~/storage/downloads
+
+------------------------------------------------------------
+LANGKAH 4 — JALANKAN SKRIP
+------------------------------------------------------------
+Contoh (dari home Termux):
+
+  python wallet.py
+  python topnod_email.py
+  python template_markas.py
+
+Untuk skrip yang butuh library tambahan (Telethon):
+
+  pip install telethon
+
+------------------------------------------------------------
+LANGKAH 5 — ISI DATA KAMU SENDIRI (WAJIB)
+------------------------------------------------------------
+Sebelum jalanin skrip, isi dulu yang bertanda placeholder:
+
+- Skrip wallet (wallet.py / wallets.py):
+  isi alamat wallet TUJUAN kamu di bagian config
+  (MAIN_EVM, MAIN_TON, MAIN_SOL, dll) + siapkan file
+  private key kamu sendiri (pkevm.txt, pkton.txt, dll).
+  Private key TIDAK PERNAH dibagikan ke siapa pun.
+
+- Skrip Telegram (markas_send.py, markas_read.py, scan.py):
+  isi api_id + api_hash kamu dari https://my.telegram.org
+  (login pakai nomor Telegram kamu, buat aplikasi baru,
+  salin api_id + api_hash ke file session/apicred.json
+  atau env TG_API_ID / TG_API_HASH).
+  Sesi Telegram (.session) juga harus milikmu sendiri.
+
+- topnod_email.py:
+  isi daftar DOMAINS dengan domain temp email kamu sendiri
+  (cek yang didukung di https://generator.email).
+
+- vmos_client.py:
+  isi PAD dengan padCode device VMOS kamu + buat file
+  .vmos_api berisi access_key + secret_key kamu.
+
+------------------------------------------------------------
+CATATAN PENTING
+------------------------------------------------------------
+- Private key / mnemonic / seed phrase / password / API key
+  adalah MILIKMU SENDIRI. Jangan pernah kirim ke siapa pun,
+  jangan pernah minta punya orang lain.
+- Kalau skrip error "module not found", install dulu:
+  pip install <nama-module> (mis. pip install telethon)
+- Kalau Termux tiba-tiba menutup saat HP terkunci, itu
+  normal (Android mematikan aplikasi background). Buka lagi
+  Termux-nya dan jalankan ulang skripnya.
+- Tutorial lengkap Termux: https://wiki.termux.com/
