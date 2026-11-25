@@ -76,3 +76,16 @@ skrip-garapan-konoha/
 ```
 
 Repo dikelola Tim Konoha. Skrip baru ditambahkan per garapan, satu folder per garapan.
+
+## Donasi
+
+Skrip di repo ini gratis. Kalau terbantu dan mau mendukung Tim Konoha, scan QRIS di bawah (Ikhtiar store):
+
+![QRIS Donasi](donasi-qris.jpg)
+
+E-wallet: 085794666973 (DANA / GoPay / OVO / dll — satu nomor untuk semua e-wallet)
+
+Wallet crypto (wallet utama):
+- EVM (Agentic): 0xeD16208263f0Bba61aD01163d636B490C292881A
+- SOL (Agentic): J8tBGxKYX3tTVVzKM32xwrTShpiANf1GsAG6NU4mVyYD
+- TON (Tonkeeper utama): UQDxwZWjzFKA2BOwCMwCYJFgTHOwiR7Y_3G12ToL33J8Ciyg
