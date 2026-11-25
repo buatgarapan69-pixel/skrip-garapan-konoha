@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """BRAMBLEKIN — skrip umum (publik, tanpa kredensial).
 
+⚠️ MATI 26 Nov 2026 ~01:30 WIB: bot @bramblekinbot hilang dari Telegram
+(username tidak bisa di-resolve) dan bramblekin.icu down (522).
+JANGAN daftar lagi — skrip ini arsip, tidak akan jalan tanpa bot.
+
 Game mining BRAM di Telegram. Token BRAM sudah trade di STON.fi.
 Gratis, tanpa deposit.
 - Bot: @bramblekinbot

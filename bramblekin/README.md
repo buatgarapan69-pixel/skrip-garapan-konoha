@@ -1,5 +1,10 @@
 # BRAMBLEKIN — Mining BRAM di Telegram (Gratis)
 
+> ⚠️ **MATI 26 Nov 2026 ~01:30 WIB** — bot @bramblekinbot hilang dari
+> Telegram (username tidak bisa di-resolve, entity kosong) dan situs
+> bramblekin.icu down (522). **JANGAN daftar lagi.** Skrip di bawah
+> hanya arsip — tidak akan jalan tanpa bot. Postingan Konoha sudah dihapus.
+
 Game mining BRAM di Telegram. Token BRAM sudah trade di STON.fi.
 
 - Bot: https://t.me/bramblekinbot
